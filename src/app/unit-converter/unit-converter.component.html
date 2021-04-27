@@ -1,0 +1,69 @@
+    
+    
+    
+    <div class="container classic p-5 shadow p-3 mb-5 bg-body rounded">
+
+        <div class="p-4">
+            <h1 class="display-4 d-flex justify-content-center" style="font-size: 25px;">Leybold Unit Converter</h1>
+        </div>
+
+        <div class="row mt-4">
+    
+            <div class="col d-flex justify-content-center">
+                
+                <div class="btn-group" ngbDropdown role="group" container="body" aria-label="Button group with nested dropdown">
+                    <button class="btn btn-outline-info" id="metric" ngbDropdownToggle style="width: 325px;">{{selectedMetric}}</button>
+                    <div class="dropdown-menu" ngbDropdownMenu aria-labelledby="metric">
+                        <button class="dropdown-item" *ngFor="let metric of metrics" (click)="ChangeMetric(metric)" >{{metric.type}}</button>
+                    </div>
+                </div>
+    
+            </div>
+
+        </div>
+
+        <div class="row mt-4">
+            <div class="col d-flex justify-content-center">
+                <input id="inputNumber" [(ngModel)]="inputNumber" type="number" #ctrl="ngModel" (keyup)="onKeyUp($event)" required>
+            </div>
+        </div>   
+    
+        <div class="row mt-4 no-gutters">
+
+            <div class="col-md-4 d-flex justify-content-center">
+    
+                <div class="btn-group" ngbDropdown role="group" container="body" aria-label="Button group with nested dropdown">
+                    <button class="btn btn-outline-primary" id="inputMenu" ngbDropdownToggle>{{selectedInputUnit.name}}</button>
+                    <div class="dropdown-menu"ngbDropdownMenu aria-labelledby="inputMenu">
+                        <button class="dropdown-item" *ngFor="let unit of inputUnits" (click)="ChangeInputUnit(unit)" >{{unit.name}}</button>
+                    </div>
+                </div>
+    
+            </div>
+
+            <div class="col-md-4 d-flex justify-content-center">
+                <button class="btn btn-outline-success" data-toggle="tooltip" data-placement="top" title="Swap Units" (click)="swapUnits()"><i class="bi bi-arrow-left-right"></i></button>
+            </div>
+
+            <div class="col-md-4 d-flex justify-content-center">
+    
+                <div class="btn-group" ngbDropdown role="group" container="body" aria-label="Button group with nested dropdown">
+                    <button class="btn btn-outline-primary" id="outputMenu" ngbDropdownToggle>{{selectedOutputUnit.name}}</button>
+                    <div class="dropdown-menu"ngbDropdownMenu aria-labelledby="outputMenu">
+                        <button class="dropdown-item" *ngFor="let unit of outputUnits" (click)="ChangeOutputUnit(unit)" >{{unit.name}}</button>
+                    </div>
+                </div>
+    
+            </div>
+    
+
+    
+        </div>
+    
+        <div class="row mt-4">
+            <div class="col d-flex justify-content-center text-center">
+                <h3>{{outputNumber}} {{selectedOutputUnit.name}}</h3>
+            </div>
+        </div>
+    
+    </div>
