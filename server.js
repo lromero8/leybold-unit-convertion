@@ -5,6 +5,7 @@ function requireHTTPS(req, res, next) {
     }
     next();
 }
+
 const express = require('express');
 const app = express();
 app.use(requireHTTPS);
