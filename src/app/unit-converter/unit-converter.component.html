@@ -24,7 +24,7 @@
 
         <div class="row mt-4">
             <div class="col d-flex justify-content-center">
-                <input id="inputNumber" [(ngModel)]="inputNumber" type="number" #ctrl="ngModel" (keyup)="onKeyUp($event)" required>
+                <input id="inputNumber" [(ngModel)]="inputNumber" type="number" #ctrl="ngModel" (ngModelChange)="modelChanged($event)" required>
             </div>
         </div>   
     
@@ -62,7 +62,7 @@
     
         <div class="row mt-4">
             <div class="col d-flex justify-content-center text-center">
-                <h3>{{outputNumber}} {{selectedOutputUnit.name}}</h3>
+                <h3>{{outputNumber | number : '1.2-5'}} {{selectedOutputUnit.name}}</h3>
             </div>
         </div>
     
