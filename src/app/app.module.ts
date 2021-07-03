@@ -6,6 +6,10 @@ import { UnitConverterComponent } from './unit-converter/unit-converter.componen
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 
+import { NgUnitsModule } from 'ng-units';
+import { systemOfUnitsInitializer } from './system-of-units-initializer';
+
+
 
 @NgModule({
   declarations: [
@@ -16,7 +20,8 @@ import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
     BrowserModule,
     NgbModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgUnitsModule.forRoot(systemOfUnitsInitializer())
   ],
   providers: [],
   bootstrap: [AppComponent]
