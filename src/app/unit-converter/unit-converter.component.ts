@@ -10,7 +10,11 @@ https://materialdesignicons.com/
 */
 
 import { Component, OnInit } from '@angular/core';
-import { Quantity, SystemOfUnits, area, frequency, length, mass, pressure, temperature, time, volume } from 'ng-units';
+import { Quantity, area, frequency, length, mass, pressure, temperature, time, volume, QuantityDefinition, SystemOfUnits } from 'ng-units';
+import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { queryStructureValidator } from '../shared/query-structure.directive';
+
+
 
 
 @Component({
@@ -18,34 +22,61 @@ import { Quantity, SystemOfUnits, area, frequency, length, mass, pressure, tempe
   templateUrl: './unit-converter.component.html',
   styleUrls: ['./unit-converter.component.css']
 })
-
-
-
 export class UnitConverterComponent implements OnInit {
 
-
-  quantityList = [area, frequency, length, mass, pressure, temperature, time, volume]
-  selectedQuantity = length
-  baseSymbol: string
-  length: Quantity;
-  quantity = new Quantity(this.selectedQuantity);
+  quantityList: QuantityDefinition[] = [area, frequency, length, mass, pressure, temperature, time, volume];
+  selectedQuantity: QuantityDefinition = length;
   value = 1.25;
+  inputValue = 2.5;
 
+  inputQuantity: Quantity;
+  outputQuantity: Quantity;
 
-  constructor(private system: SystemOfUnits) {
-   }
+  regex: RegExp = /^[0-9]+ \b(m2|cm2|mm3|m|cm|mm|in|ft|Hz|kHz|MHz|rpm|g|kg|t|Pa|bar|mbar|Torr|mTorr|psi|inHg|k|c|f|ms|s|min|h|m3|cm3|mm3)\b in \b(m2|cm2|mm3|m|cm|mm|in|ft|Hz|kHz|MHz|rpm|g|kg|t|Pa|bar|mbar|Torr|mTorr|psi|inHg|k|c|f|ms|s|min|h|m3|cm3|mm3)\b/;
+
+  profileForm!: FormGroup;
+  // profileForm = this.fb.group({
+  //   firstName: ['', { validators: queryStructureValidator(this.regex), updateOn: "submit" }]
+  // });
+
+  constructor(private fb: FormBuilder, private system: SystemOfUnits) { }
 
   ngOnInit(): void {
-    this.length = this.system.get('Length');
-    this.system.selectUnit(this.quantity, 'mm');
-    this.baseSymbol = this.system.get(this.selectedQuantity.name).unit.symbol
+    this.changeMetric(length);
+    this.system.selectUnit(this.outputQuantity, 'cm');
+
+    this.profileForm = new FormGroup({
+      firstName: new FormControl('', [queryStructureValidator(this.regex)])
+    });
   }
+
   
-  changeMetric(metric): void {
+
+  changeMetric(metric: QuantityDefinition): void {
+    console.log(metric)
     this.selectedQuantity = metric;
-    let units: any = this.system.get(this.selectedQuantity.name).units;
-    this.baseSymbol = units.find(x => x.factor == 1).symbol
-    this.quantity = new Quantity(this.selectedQuantity);
+    this.inputQuantity = new Quantity(metric);
+    this.outputQuantity = new Quantity(metric);
+  }
+
+  keyDownFunction() {
+    if (this.profileForm.valid) {
+      let strArray = this.profileForm.value.firstName.split(' ');
+      console.log(strArray[0], strArray[1], strArray[3])
+      this.system.selectUnit(this.inputQuantity, strArray[1]);
+      this.value = Number(strArray[0]);
+      this.system.selectUnit(this.outputQuantity, strArray[3]);
+      // this.system.broadcast(this.inputQuantity)
+      // this.system.broadcast(this.outputQuantity)
+      // this.selectedQuantity = 
+      // console.log(this.value)
+      // console.log(this.system.get('Length'))
+      
+    }
   }
 
 }
+
+// To-Do
+  // Get the value right
+  // Change metric with Quantity

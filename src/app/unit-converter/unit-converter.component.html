@@ -10,7 +10,7 @@
     
             <div class="col-sm d-flex justify-content-center">
     
-                <div class="form-group" *ngIf="quantity">
+                <div class="form-group">
                     <div class="btn-group" ngbDropdown role="group" container="body" aria-label="Button group with nested dropdown">
                         <button class="btn btn-outline-info" id="quantity" ngbDropdownToggle style="width: 325px;">{{selectedQuantity.name}}</button>
                         <div class="dropdown-menu" ngbDropdownMenu aria-labelledby="quantity">
@@ -27,33 +27,63 @@
 
             <div class="col-sm">
                 <div class="form-group">
-                    <label for="value-raw">From <b>{{baseSymbol}} </b></label>
-                    <input id="value-raw" name="valueRaw" class="form-control" type="number" [(ngModel)]="value">
+                  <label for="value-raw">From <b>{{inputQuantity.unit.symbol}} </b></label>
+                  <div class="input-group">
+                    <input id="value-raw" name="valueRaw" class="form-control" type="number" [(ngModel)]="value"
+                      [ngQuantity]="inputQuantity">
+                    <select class="form-control" [ngUnitSelect]="inputQuantity"></select>
+                  </div>
                 </div>
             </div>
 
             <div class="col-sm">
-                <div class="form-group" *ngIf="quantity">
-                    <label for="select-unit">Select the {{ quantity.name | lowercase }} unit</label>
-                    <select class="form-control" id="select-unit" [ngUnitSelect]="quantity" name="unit">
-                    </select>
-                </div>
-            </div>
-
-            <div class="col-sm">
-                <div class="form-group"  *ngIf="quantity">
-                    <label for="value-length">To <b>{{quantity.unit.symbol}}</b></label>
-                    <input id="value-length" name="valueLength" class="form-control" type="number"
-                    [(ngModel)]="value" [ngQuantity]="quantity">
+                <div class="form-group" *ngIf="outputQuantity">
+                  <label for="value-length">To <b>{{outputQuantity.unit.symbol}}</b></label>
+                  <div class="input-group">
+                    <input id="value-length" name="valueLength" class="form-control" type="number" [(ngModel)]="value"
+                      [ngQuantity]="outputQuantity">
+                    <select class="form-control" [ngUnitSelect]="outputQuantity"></select>
+                  </div>
                 </div>
             </div>
 
         </div>
+
+        <div class="row mt-4">
+            <div class="col-sm d-flex justify-content-center">
+                <form [formGroup]="profileForm" (ngSubmit)="keyDownFunction()" #formDir="ngForm">
+                    <div class="form-group">
+                        <input 
+                            type="text"
+                            class="form-control text-center"
+                            formControlName="firstName"
+                            id="validationServer03" 
+                            placeholder="25 cm in m"
+                            aria-describedby="validationServer03Feedback" 
+                            [ngClass]="{'is-invalid' : !profileForm.valid && profileForm.dirty,
+                                        'is-valid': profileForm.valid}"
+                        />
+                        <div *ngIf="!profileForm.valid && formDir.submitted" id="validationServer03Feedback" class="invalid-feedback">
+                            Please follow the example and then press enter
+                        </div>
+                        <!-- <div *ngIf="profileForm.controls['firstName']?.touched">Is touched</div> -->
+                        <!-- <div *ngIf="profileForm?.dirty">Is touched</div> -->
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+        <p>Form Status: {{ profileForm.status }}</p>
+
 
         <div class="text-center mt-4">
-            <div id="pipe-test-1" class="display-4">{{ value | ngQuantity:quantity:true }}</div>
+            <div id="pipe-test-1" class="display-4">
+                {{ value | ngQuantity:inputQuantity:true }} = {{ value | ngQuantity:outputQuantity:true }}
+            </div>
         </div>
 
-      </form>
+        </form>
+
     
     </div>
