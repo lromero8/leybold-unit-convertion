@@ -15,6 +15,7 @@ import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms'
 import { queryStructureValidator } from '../shared/query-structure.directive';
 
 
+const regex: RegExp = /^[0-9]+ \b(m2|cm2|mm3|m|cm|mm|in|ft|Hz|kHz|MHz|rpm|g|kg|t|Pa|bar|mbar|Torr|mTorr|psi|inHg|k|c|f|ms|s|min|h|m3|cm3|mm3)\b in \b(m2|cm2|mm3|m|cm|mm|in|ft|Hz|kHz|MHz|rpm|g|kg|t|Pa|bar|mbar|Torr|mTorr|psi|inHg|k|c|f|ms|s|min|h|m3|cm3|mm3)\b/;
 
 
 @Component({
@@ -27,17 +28,12 @@ export class UnitConverterComponent implements OnInit {
   quantityList: QuantityDefinition[] = [area, frequency, length, mass, pressure, temperature, time, volume];
   selectedQuantity: QuantityDefinition = length;
   value = 1.25;
-  inputValue = 2.5;
 
   inputQuantity: Quantity;
   outputQuantity: Quantity;
 
-  regex: RegExp = /^[0-9]+ \b(m2|cm2|mm3|m|cm|mm|in|ft|Hz|kHz|MHz|rpm|g|kg|t|Pa|bar|mbar|Torr|mTorr|psi|inHg|k|c|f|ms|s|min|h|m3|cm3|mm3)\b in \b(m2|cm2|mm3|m|cm|mm|in|ft|Hz|kHz|MHz|rpm|g|kg|t|Pa|bar|mbar|Torr|mTorr|psi|inHg|k|c|f|ms|s|min|h|m3|cm3|mm3)\b/;
 
-  profileForm!: FormGroup;
-  // profileForm = this.fb.group({
-  //   firstName: ['', { validators: queryStructureValidator(this.regex), updateOn: "submit" }]
-  // });
+  queryForm!: FormGroup;
 
   constructor(private fb: FormBuilder, private system: SystemOfUnits) { }
 
@@ -45,8 +41,8 @@ export class UnitConverterComponent implements OnInit {
     this.changeMetric(length);
     this.system.selectUnit(this.outputQuantity, 'cm');
 
-    this.profileForm = new FormGroup({
-      firstName: new FormControl('', [queryStructureValidator(this.regex)])
+    this.queryForm = new FormGroup({
+      firstName: new FormControl('', [queryStructureValidator(regex)])
     });
   }
 
@@ -59,18 +55,13 @@ export class UnitConverterComponent implements OnInit {
     this.outputQuantity = new Quantity(metric);
   }
 
-  keyDownFunction() {
-    if (this.profileForm.valid) {
-      let strArray = this.profileForm.value.firstName.split(' ');
+  submitQuery() {
+    if (this.queryForm.valid) {
+      let strArray = this.queryForm.value.firstName.split(' ');
       console.log(strArray[0], strArray[1], strArray[3])
+      this.value = parseFloat(strArray[0]);
       this.system.selectUnit(this.inputQuantity, strArray[1]);
-      this.value = Number(strArray[0]);
       this.system.selectUnit(this.outputQuantity, strArray[3]);
-      // this.system.broadcast(this.inputQuantity)
-      // this.system.broadcast(this.outputQuantity)
-      // this.selectedQuantity = 
-      // console.log(this.value)
-      // console.log(this.system.get('Length'))
       
     }
   }
@@ -78,5 +69,5 @@ export class UnitConverterComponent implements OnInit {
 }
 
 // To-Do
-  // Get the value right
+  // Assign value without converting it
   // Change metric with Quantity
