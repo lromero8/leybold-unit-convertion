@@ -11,11 +11,11 @@ https://materialdesignicons.com/
 
 import { Component, OnInit } from '@angular/core';
 import { Quantity, area, frequency, length, mass, pressure, temperature, time, volume, QuantityDefinition, SystemOfUnits } from 'ng-units';
-import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { queryStructureValidator } from '../shared/query-structure.directive';
 
 
-const regex: RegExp = /^[0-9]+ \b(m2|cm2|mm3|m|cm|mm|in|ft|Hz|kHz|MHz|rpm|g|kg|t|Pa|bar|mbar|Torr|mTorr|psi|inHg|k|c|f|ms|s|min|h|m3|cm3|mm3)\b in \b(m2|cm2|mm3|m|cm|mm|in|ft|Hz|kHz|MHz|rpm|g|kg|t|Pa|bar|mbar|Torr|mTorr|psi|inHg|k|c|f|ms|s|min|h|m3|cm3|mm3)\b/;
+const regex: RegExp = /^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)+ \b(m²|cm²|mm³|m|cm|mm|in|ft|Hz|kHz|MHz|rpm|g|kg|t|Pa|bar|mbar|Torr|mTorr|psi|inHg|K|°C|°F|ms|s|min|h|m³|cm³|mm³)\b in \b(m²|cm²|mm³|m|cm|mm|in|ft|Hz|kHz|MHz|rpm|g|kg|t|Pa|bar|mbar|Torr|mTorr|psi|inHg|K|°C|°F|ms|s|min|h|m³|cm³|mm³)\b/;
 
 
 @Component({
@@ -28,6 +28,7 @@ export class UnitConverterComponent implements OnInit {
   quantityList: QuantityDefinition[] = [area, frequency, length, mass, pressure, temperature, time, volume];
   selectedQuantity: QuantityDefinition = length;
   value = 1.25;
+  invalidUnits: Boolean = false;
 
   inputQuantity: Quantity;
   outputQuantity: Quantity;
@@ -35,14 +36,14 @@ export class UnitConverterComponent implements OnInit {
 
   queryForm!: FormGroup;
 
-  constructor(private fb: FormBuilder, private system: SystemOfUnits) { }
+  constructor(private system: SystemOfUnits) { }
 
   ngOnInit(): void {
     this.changeMetric(length);
     this.system.selectUnit(this.outputQuantity, 'cm');
 
     this.queryForm = new FormGroup({
-      firstName: new FormControl('', [queryStructureValidator(regex)])
+      queryControl: new FormControl('', [queryStructureValidator(regex)])
     });
   }
 
@@ -55,19 +56,44 @@ export class UnitConverterComponent implements OnInit {
     this.outputQuantity = new Quantity(metric);
   }
 
+
+  validateTwoQuantityDefinitions(fromSymbol: string, toSymbol: string){
+    return this.quantityList.find( i => {
+      if(Object.keys(i.units).includes(fromSymbol) && Object.keys(i.units).includes(toSymbol))
+        return i.name
+    })
+  }
+
   submitQuery() {
-    if (this.queryForm.valid) {
-      let strArray = this.queryForm.value.firstName.split(' ');
-      console.log(strArray[0], strArray[1], strArray[3])
-      this.value = parseFloat(strArray[0]);
-      this.system.selectUnit(this.inputQuantity, strArray[1]);
-      this.system.selectUnit(this.outputQuantity, strArray[3]);
+    if (this.queryForm.valid) { // Check if the syntax is correct
+      let strArray = this.queryForm.value.queryControl.split(' ');
+      let quantity = this.validateTwoQuantityDefinitions(strArray[1], strArray[3]);
+      if(quantity !== undefined){  // Check if the two units belong to the same Quantity
+        this.changeMetric(this.quantityList.find(i => i.name === quantity.name))
+        
+        this.system.selectUnit(this.inputQuantity, strArray[1]);
+        // console.log(this.inputQuantity)
+        this.value = this.inputQuantity.toBase(parseFloat(strArray[0]))
+        this.system.selectUnit(this.outputQuantity, strArray[3]);
+        // console.log(this.outputQuantity)
+
+        
+      }
+      else { // Validate two units belong to the same Quantity
+        this.queryForm.controls['queryControl'].setErrors({'incorrect': true})
+        this.invalidUnits = true
+      }
       
     }
   }
 
+  
 }
 
 // To-Do
-  // Assign value without converting it
-  // Change metric with Quantity
+  // Select unit on select input after query submit
+  // Validate with ngmodelchanged or onvaluechanges
+
+// Notes
+  // Model-Driven Form: FormBuilder/FormGroup
+  // Template-Driven Form: ngModel and Name

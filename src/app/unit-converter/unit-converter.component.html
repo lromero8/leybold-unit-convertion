@@ -6,6 +6,44 @@
             <h1 class="display-4 d-flex justify-content-center" style="font-size: 25px;">Unit Converter</h1>
         </div>
 
+
+        <div class="row mt-4">
+            <div class="col-sm d-flex justify-content-center">
+                <form autocomplete="off" [formGroup]="queryForm" (ngSubmit)="submitQuery()" #formDir="ngForm">
+                    <div class="form-group">
+                        <input 
+                            type="text"
+                            class="form-control text-center"
+                            formControlName="queryControl"
+                            id="validationServer03" 
+                            placeholder="25 cm in m"
+                            aria-describedby="validationServer03Feedback" 
+                            [ngClass]="{'is-invalid' : !queryForm.valid && queryForm.dirty,
+                                        'is-valid': queryForm.valid}"
+                        />
+                        <div class="invalid-feedback text-center" *ngIf="invalidUnits" id="validationServer03Feedback">
+                            Invalid convertion between units
+                        </div>
+                        <div class="invalid-feedback text-center" *ngIf="!queryForm.valid && formDir.submitted" id="validationServer03Feedback">
+                            Please follow the example and then press enter
+                        </div>
+                        <div class="invalid-feedback text-center" *ngIf="!queryForm.valid && formDir.submitted" id="validationServer03Feedback">
+                            Eg: 25 cm in m
+                        </div>
+                        <!-- <div *ngIf="queryForm.controls['queryControl']?.touched">Is touched</div> -->
+                        <!-- <div *ngIf="queryForm?.dirty">Is touched</div> -->
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+        <div class="row mt-4">
+            <div class="col-sm">
+                <hr class="hr-text" data-content="or">
+            </div>
+        </div>
+
         <div class="row mt-4">
     
             <div class="col-sm d-flex justify-content-center">
@@ -47,39 +85,6 @@
                 </div>
             </div>
 
-        </div>
-
-        <div class="row mt-4">
-            <div class="col-sm">
-                <hr class="hr-text" data-content="or">
-            </div>
-        </div>
-
-        <div class="row mt-4">
-            <div class="col-sm d-flex justify-content-center">
-                <form [formGroup]="queryForm" (ngSubmit)="submitQuery()" #formDir="ngForm">
-                    <div class="form-group">
-                        <input 
-                            type="text"
-                            class="form-control text-center"
-                            formControlName="firstName"
-                            id="validationServer03" 
-                            placeholder="25 cm in m"
-                            aria-describedby="validationServer03Feedback" 
-                            [ngClass]="{'is-invalid' : !queryForm.valid && queryForm.dirty,
-                                        'is-valid': queryForm.valid}"
-                        />
-                        <div class="invalid-feedback text-center" *ngIf="!queryForm.valid && formDir.submitted" id="validationServer03Feedback">
-                            Please follow the example and then press enter
-                        </div>
-                        <div class="invalid-feedback text-center" *ngIf="!queryForm.valid && formDir.submitted" id="validationServer03Feedback">
-                            Eg: 25 cm in m
-                        </div>
-                        <!-- <div *ngIf="queryForm.controls['firstName']?.touched">Is touched</div> -->
-                        <!-- <div *ngIf="queryForm?.dirty">Is touched</div> -->
-                    </div>
-                </form>
-            </div>
         </div>
 
 
