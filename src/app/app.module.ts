@@ -8,13 +8,15 @@ import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 
 import { NgUnitsModule } from 'ng-units';
 import { systemOfUnitsInitializer } from './system-of-units-initializer';
+import { TwoQuantitiesValidator } from './shared/two-quantities-validator.directive';
 
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    UnitConverterComponent
+    UnitConverterComponent,
+    TwoQuantitiesValidator
   ],
   imports: [
     BrowserModule,

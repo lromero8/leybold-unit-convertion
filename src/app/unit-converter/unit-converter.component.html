@@ -9,25 +9,31 @@
 
         <div class="row mt-4">
             <div class="col-sm d-flex justify-content-center">
-                <form autocomplete="off" [formGroup]="queryForm" (ngSubmit)="submitQuery()" #formDir="ngForm">
+                <form autocomplete="off" #queryForm="ngForm">
                     <div class="form-group">
                         <input 
                             type="text"
                             class="form-control text-center"
-                            formControlName="queryControl"
                             id="validationServer03" 
                             placeholder="25 cm in m"
+                            required
                             aria-describedby="validationServer03Feedback" 
                             [ngClass]="{'is-invalid' : !queryForm.valid && queryForm.dirty,
                                         'is-valid': queryForm.valid}"
+                            [pattern]="regex"
+                            name="queryInput"
+                            [(ngModel)]="queryInput"
+                            #twoQuantitiesModel="ngModel"
+                            twoQuantitiesValidator
+                            (ngModelChange)="queryForm.valid && submitQuery($event)"
                         />
-                        <div class="invalid-feedback text-center" *ngIf="invalidUnits" id="validationServer03Feedback">
+                        <div class="invalid-feedback text-center" *ngIf="twoQuantitiesModel.errors?.InvalidQuantities" id="validationServer03Feedback">
                             Invalid convertion between units
                         </div>
-                        <div class="invalid-feedback text-center" *ngIf="!queryForm.valid && formDir.submitted" id="validationServer03Feedback">
-                            Please follow the example and then press enter
+                        <div class="invalid-feedback text-center" *ngIf="!queryForm.errors?.pattern" id="validationServer03Feedback">
+                            Please follow the example
                         </div>
-                        <div class="invalid-feedback text-center" *ngIf="!queryForm.valid && formDir.submitted" id="validationServer03Feedback">
+                        <div class="invalid-feedback text-center" *ngIf="!queryForm.errors?.pattern" id="validationServer03Feedback">
                             Eg: 25 cm in m
                         </div>
                         <!-- <div *ngIf="queryForm.controls['queryControl']?.touched">Is touched</div> -->
@@ -86,9 +92,6 @@
             </div>
 
         </div>
-
-
-        <!-- <p>Form Status: {{ queryForm.status }}</p> -->
 
 
         <div class="text-center mt-4">
