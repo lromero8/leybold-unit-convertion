@@ -7,6 +7,10 @@ https://euwdata.azureedge.net/cross-selling/v4/materials_ley.json
 https://euwvinbisstorage1.blob.core.windows.net/accss-demo/master/demo/index.html#home
 https://materialdesignicons.com/
 
+Notes
+  Model-Driven Form: FormBuilder/FormGroup
+  Template-Driven Form: ngModel and Name
+
 */
 
 import { Component, OnInit } from '@angular/core';
@@ -25,11 +29,12 @@ export class UnitConverterComponent implements OnInit {
   quantityList: QuantityDefinition[] = [area, frequency, length, mass, pressure, temperature, time, volume];
   selectedQuantity: QuantityDefinition = length;
   value = 1.25;
-  invalidUnits: Boolean = false;
 
   inputQuantity: Quantity;
   outputQuantity: Quantity;
 
+  selectedInput: string = "m";
+  selectedOutput: string = "cm";
   queryInput: string;
 
 
@@ -43,7 +48,7 @@ export class UnitConverterComponent implements OnInit {
   
 
   changeMetric(metric: QuantityDefinition): void {
-    console.log(metric)
+    // console.log(metric)
     this.selectedQuantity = metric;
     this.inputQuantity = new Quantity(metric);
     this.outputQuantity = new Quantity(metric);
@@ -64,17 +69,12 @@ export class UnitConverterComponent implements OnInit {
     this.changeMetric(definition);
 
     this.system.selectUnit(this.inputQuantity, strArray[1]);
+    this.selectedInput = this.inputQuantity.unit.symbol
     this.value = this.inputQuantity.toBase(parseFloat(strArray[0]))
     this.system.selectUnit(this.outputQuantity, strArray[3]);
+    this.selectedOutput = this.outputQuantity.unit.symbol
     
   }
 
   
 }
-
-// To-Do
-  // Select correct units on selectors after query input is submitted
-
-// Notes
-  // Model-Driven Form: FormBuilder/FormGroup
-  // Template-Driven Form: ngModel and Name

@@ -75,7 +75,7 @@
                   <div class="input-group">
                     <input id="value-raw" name="valueRaw" class="form-control" type="number" [(ngModel)]="value"
                       [ngQuantity]="inputQuantity">
-                    <select class="form-control" [ngUnitSelect]="inputQuantity"></select>
+                    <select class="form-control" name="selectedInput" [(ngModel)]="selectedInput" [ngUnitSelect]="inputQuantity"></select>
                   </div>
                 </div>
             </div>
@@ -86,7 +86,7 @@
                   <div class="input-group">
                     <input id="value-length" name="valueLength" class="form-control" type="number" [(ngModel)]="value"
                       [ngQuantity]="outputQuantity">
-                    <select class="form-control" [ngUnitSelect]="outputQuantity"></select>
+                    <select class="form-control" name="selectedOutput" [(ngModel)]="selectedOutput" [ngUnitSelect]="outputQuantity"></select>
                   </div>
                 </div>
             </div>
