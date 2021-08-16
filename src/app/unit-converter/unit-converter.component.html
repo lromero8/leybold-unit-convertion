@@ -25,6 +25,7 @@
                             [(ngModel)]="queryInput"
                             #twoQuantitiesModel="ngModel"
                             twoQuantitiesValidator
+                            (keyup.backspace)="clearQuery()"
                             (ngModelChange)="queryForm.valid && submitQuery($event)"
                         />
                         <div class="invalid-feedback text-center" *ngIf="twoQuantitiesModel.errors?.InvalidQuantities" id="validationServer03Feedback">

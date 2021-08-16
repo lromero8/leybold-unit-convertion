@@ -33,8 +33,8 @@ export class UnitConverterComponent implements OnInit {
   inputQuantity: Quantity;
   outputQuantity: Quantity;
 
-  selectedInput: string = "m";
-  selectedOutput: string = "cm";
+  selectedInput = "m";
+  selectedOutput = "cm";
   queryInput: string;
 
 
@@ -44,9 +44,9 @@ export class UnitConverterComponent implements OnInit {
     this.changeMetric(length);
     this.system.selectUnit(this.outputQuantity, 'cm');
   }
-
   
-
+  
+  
   changeMetric(metric: QuantityDefinition): void {
     // console.log(metric)
     this.selectedQuantity = metric;
@@ -62,19 +62,22 @@ export class UnitConverterComponent implements OnInit {
     })
   }
 
+
   submitQuery(e: string) {
-    // console.log(e);
-    let strArray = e.split(' ');
-    let definition = this.getSystemFromSymbol(strArray[1])
+    console.log(e);
+    const strArray = e.split(' ');
+    const definition = this.getSystemFromSymbol(strArray[1])
     this.changeMetric(definition);
 
     this.system.selectUnit(this.inputQuantity, strArray[1]);
-    this.selectedInput = this.inputQuantity.unit.symbol
     this.value = this.inputQuantity.toBase(parseFloat(strArray[0]))
     this.system.selectUnit(this.outputQuantity, strArray[3]);
-    this.selectedOutput = this.outputQuantity.unit.symbol
-    
+    this.selectedInput = this.inputQuantity.unit.symbol;
+    this.selectedOutput = this.outputQuantity.unit.symbol;    
   }
 
+  clearQuery(){
+    this.queryInput = ""    
+  }
   
 }
